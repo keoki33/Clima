@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManagerDelegate {
+class WeatherViewController: UIViewController {
     
   
 
@@ -20,9 +20,6 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     var weatherManager = WeatherManager()
     
     
-   
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchTextField.delegate = self
@@ -30,13 +27,26 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         
     }
 
+}
+
+//MARK: - UITextFieldDelegate
+
+extension WeatherViewController: UITextFieldDelegate {
     
     @IBAction func searchPressed(_ sender: UIButton) {
-        print(searchTextField.text!)
-        searchTextField.endEditing(true)
-        
+          print(searchTextField.text!)
+          searchTextField.endEditing(true)
+          
+      }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textField.text != "" {
+            return true
+        } else {
+            textField.placeholder = "Type something"
+            return false
+        }
     }
- 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print(searchTextField.text!)
@@ -50,6 +60,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         }
         searchTextField.text = ""
     }
+
+}
+
+//MARK: - WeatherManagerDelegate
+
+extension WeatherViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) -> Void {
         DispatchQueue.main.async {
@@ -62,18 +78,7 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
             print(error)
     }
     
-    
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != "" {
-            return true
-        } else {
-            textField.placeholder = "Type something"
-            return false
-        }
-    }
-    
-    
-    
-    
 }
+
+
 
