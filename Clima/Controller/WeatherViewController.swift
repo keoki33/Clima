@@ -35,7 +35,12 @@ class WeatherViewController: UIViewController {
         weatherManager.delegate = self
 
     }
-
+    
+    
+    @IBAction func gpsButtonPressed(_ sender: UIButton) {
+        locationManager.requestLocation()
+    }
+    
 }
 
 //MARK: - UITextFieldDelegate
@@ -79,6 +84,7 @@ extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) -> Void {
         DispatchQueue.main.async {
             self.temperatureLabel.text  = weather.temperatureString
+            self.cityLabel.text = weather.cityName
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)        }
     }
     
@@ -96,6 +102,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
+            locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.latitude
             weatherManager.fetchWeather(latitude: lat, longtitude: lon)
